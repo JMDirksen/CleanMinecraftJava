@@ -1,1 +1,1 @@
-tellraw @a {"text":"Server will restart in 10 seconds...","color":"red"}
+tellraw @a {"text":"Server will restart in 20 seconds...","color":"red"}
