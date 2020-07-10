@@ -33,3 +33,15 @@ crontab -e
   @reboot ~/cleanmcjava/start.sh
   0 0 * * * ~/cleanmcjava/countusers.sh
 ```
+
+## Minecraft Stats
+
+```bash
+sudo apt install apache2
+sudo nano /var/www/html/index.html
+  <script>location.href='./minecraftstats';</script>
+sudo git clone https://github.com/pdinklag/MinecraftStats.git /var/www/html/minecraftstats
+sudo chown -R jefta:jefta /var/www/html/minecraftstats
+crontab -e
+  */5 * * * * /var/www/html/minecraftstats/update.py -s ~/cleanmcjava -d /var/www/html/minecraftstats/data >/dev/null
+```
