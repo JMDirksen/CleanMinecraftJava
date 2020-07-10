@@ -23,6 +23,7 @@ screen -r cleanmcjava
 /tp 0 100 0
 /setworldspawn
 /gamerule spawnRadius 100
+/gamerule keepInventory true
 ```
 
 ## Automate
