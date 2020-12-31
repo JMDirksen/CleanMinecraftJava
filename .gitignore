@@ -4,5 +4,7 @@
 /usercount
 /logs/
 /debug/
+/crash-reports/
 /world/*
 !/world/datapacks/
+Thumbs.db
