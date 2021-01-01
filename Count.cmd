@@ -19,12 +19,12 @@ netstat -n | find ":%port% " | find /c "ESTABLISHED" > %tempfile%
 set /p count=<%tempfile%
 del %tempfile%
 
-:: Calculate averages (x1000)
-set /a avg15min=(%avg15min%*2+(%count%*1000))/3
-set /a avghour=(%avghour%*11+(%count%*1000))/12
-set /a avgday=(%avgday%*287+(%count%*1000))/288
-set /a avgweek=(%avgweek%*2015+(%count%*1000))/2016
-set /a avgmonth=(%avgmonth%*8639+(%count%*1000))/8640
+:: Calculate averages (x10000)
+set /a avg15min=(%avg15min%*2+(%count%*10000))/3
+set /a avghour=(%avghour%*11+(%count%*10000))/12
+set /a avgday=(%avgday%*287+(%count%*10000))/288
+set /a avgweek=(%avgweek%*2015+(%count%*10000))/2016
+set /a avgmonth=(%avgmonth%*8639+(%count%*10000))/8640
 
 :: Store stats
 echo avg15min=%avg15min% > %datafile%
