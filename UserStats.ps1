@@ -55,16 +55,16 @@ function Main {
     $output += "Total      " + $total          +[environment]::NewLine
     $output += "" +[environment]::NewLine
     $output += "# Maximum players online" +[environment]::NewLine
-    $output += "Today      " + [math]::Round($today.Maximum,2) + " (" + [math]::Round(($today.Maximum - $yesterday.Maximum),2) + ")" +[environment]::NewLine
-    $output += "This week  " + [math]::Round($week.Maximum,2)  + " (" + [math]::Round(($week.Maximum  - $lastWeek.Maximum),2)  + ")" +[environment]::NewLine
-    $output += "This month " + [math]::Round($month.Maximum,2) + " (" + [math]::Round(($month.Maximum - $lastMonth.Maximum),2) + ")" +[environment]::NewLine
-    $output += "This year  " + [math]::Round($year.Maximum,2)  + " (" + [math]::Round(($year.Maximum  - $lastYear.Maximum),2)  + ")" +[environment]::NewLine
+    $output += "Today      " + [math]::Round($today.Maximum,2) + " (" + [math]::Round(($today.Maximum - $yesterday.Maximum) / $yesterday.Maximum * 100) + "%)" +[environment]::NewLine
+    $output += "This week  " + [math]::Round($week.Maximum ,2) + " (" + [math]::Round(($week.Maximum  - $lastWeek.Maximum)  / $lastWeek.Maximum  * 100) + "%)" +[environment]::NewLine
+    $output += "This month " + [math]::Round($month.Maximum,2) + " (" + [math]::Round(($month.Maximum - $lastMonth.Maximum) / $lastMonth.Maximum * 100) + "%)" +[environment]::NewLine
+    $output += "This year  " + [math]::Round($year.Maximum ,2) + " (" + [math]::Round(($year.Maximum  - $lastYear.Maximum)  / $lastYear.Maximum  * 100) + "%)" +[environment]::NewLine
     $output += "" +[environment]::NewLine
     $output += "# Average players online" +[environment]::NewLine
-    $output += "Today      " + [math]::Round($today.Average,2) + " (" + [math]::Round(($today.Average - $yesterday.Average),2) + ")" +[environment]::NewLine
-    $output += "This week  " + [math]::Round($week.Average,2)  + " (" + [math]::Round(($week.Average  - $lastWeek.Average),2)  + ")" +[environment]::NewLine
-    $output += "This month " + [math]::Round($month.Average,2) + " (" + [math]::Round(($month.Average - $lastMonth.Average),2) + ")" +[environment]::NewLine
-    $output += "This year  " + [math]::Round($year.Average,2)  + " (" + [math]::Round(($year.Average  - $lastYear.Average),2)  + ")" +[environment]::NewLine
+    $output += "Today      " + [math]::Round($today.Average,2) + " (" + [math]::Round(($today.Average - $yesterday.Average) / $yesterday.Average * 100) + "%)" +[environment]::NewLine
+    $output += "This week  " + [math]::Round($week.Average ,2) + " (" + [math]::Round(($week.Average  - $lastWeek.Average)  / $lastWeek.Average  * 100) + "%)" +[environment]::NewLine
+    $output += "This month " + [math]::Round($month.Average,2) + " (" + [math]::Round(($month.Average - $lastMonth.Average) / $lastMonth.Average * 100) + "%)" +[environment]::NewLine
+    $output += "This year  " + [math]::Round($year.Average ,2) + " (" + [math]::Round(($year.Average  - $lastYear.Average)  / $lastYear.Average  * 100) + "%)" +[environment]::NewLine
 
     $output | Out-File UserStats.txt
     [environment]::NewLine + $output
