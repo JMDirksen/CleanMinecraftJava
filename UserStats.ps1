@@ -1,52 +1,84 @@
 ﻿$statsDir = "world\stats"
 $dbFile = "UserStats.json"
 
-# Load db (as hashtable)
-$db = @{}
-(Get-Content $dbFile | ConvertFrom-Json).psobject.properties | ForEach-Object { $db[$_.Name] = $_.Value }
+function Main {
+    # Load db (as hashtable)
+    $db = @{}
+    (Get-Content $dbFile | ConvertFrom-Json).psobject.properties | ForEach-Object { $db[$_.Name] = $_.Value }
 
-# Get statistics
-$statsFiles = Get-ChildItem $statsDir -Filter *.json
+    # Get statistics
+    $statsFiles = Get-ChildItem $statsDir -Filter *.json
+    $current   = ($statsFiles | Where-Object {$_.LastWriteTime -gt (Get-Date).AddMinutes(-5)}).Count
+    $totalLastHour  = ($statsFiles | Where-Object {$_.LastWriteTime -gt (Get-Date).AddHours(-1)  }).Count
+    $totalLastDay   = ($statsFiles | Where-Object {$_.LastWriteTime -gt (Get-Date).AddDays(-1)   }).Count
+    $totalLastWeek  = ($statsFiles | Where-Object {$_.LastWriteTime -gt (Get-Date).AddDays(-7)   }).Count
+    $totalLastMonth = ($statsFiles | Where-Object {$_.LastWriteTime -gt (Get-Date).AddMonths(-1) }).Count
+    $totalLastYear  = ($statsFiles | Where-Object {$_.LastWriteTime -gt (Get-Date).AddYears(-1)  }).Count
+    $total     = $statsFiles.Count
 
-$current = ($statsFiles | Where-Object {$_.LastWriteTime -gt (Get-Date).AddMinutes(-5)}).Count
-$hour    = ($statsFiles | Where-Object {$_.LastWriteTime -gt (Get-Date).AddHours(-1)  }).Count
-$total   = $statsFiles.Count
+    # Add record
+    $key = Get-DateKey (Get-Date)
+    $db[$key] = $current
 
-$stats = @{}
-$stats.Day   = ($statsFiles | Where-Object {$_.LastWriteTime -gt (Get-Date).AddDays(-1)  }).Count
-$stats.Week  = ($statsFiles | Where-Object {$_.LastWriteTime -gt (Get-Date).AddDays(-7)  }).Count
-$stats.Month = ($statsFiles | Where-Object {$_.LastWriteTime -gt (Get-Date).AddMonths(-1)}).Count
-$stats.Year  = ($statsFiles | Where-Object {$_.LastWriteTime -gt (Get-Date).AddYears(-1) }).Count
+    # Store db
+    $db | ConvertTo-Json -Compress | Out-File -FilePath $dbFile
 
-$averageDay   = [math]::Round(($db.AverageDay   *    287 + $current) /    288, 10)
-$averageWeek  = [math]::Round(($db.AverageWeek  *   2015 + $current) /   2016, 10)
-$averageMonth = [math]::Round(($db.AverageMonth *   8639 + $current) /   8640, 10)
-$averageYear  = [math]::Round(($db.AverageYear  * 103679 + $current) / 103680, 10)
+    # Calculate statistics
+    $todayKey = $key.Substring(0, 8)
+    $today = $db.GetEnumerator() | Where-Object {$_.Key.StartsWith($todayKey)} | Measure-Object Value -Average -Maximum
+    $yesterdayKey = (Get-DateKey (Get-Date).AddDays(-1)).Substring(0, 8)
+    $yesterday = $db.GetEnumerator() | Where-Object {$_.Key.StartsWith($yesterdayKey)} | Measure-Object Value -Average -Maximum
 
-# Update db
-$db.Current      = $current
-$db.Hour         = $hour
-$db.Total        = $total
-$db.AverageDay   = $averageDay
-$db.AverageWeek  = $averageWeek
-$db.AverageMonth = $averageMonth
-$db.AverageYear  = $averageYear
-$date = (Get-Date).AddMinutes(-1).ToShortDateString()
-$db.Remove($date)
-$db[$date] = $stats
+    $weekKey = $key.Substring(0, 6)
+    $week = $db.GetEnumerator() | Where-Object {$_.Key.StartsWith($weekKey)} | Measure-Object Value -Average -Maximum
+    $lastWeekKey = (Get-DateKey (Get-Date).AddDays(-7)).Substring(0, 6)
+    $lastWeek = $db.GetEnumerator() | Where-Object {$_.Key.StartsWith($lastWeekKey)} | Measure-Object Value -Average -Maximum
 
-# Store db
-$db | ConvertTo-Json -Compress | Out-File -FilePath $dbFile
+    $monthKey = $key.Substring(0, 4)
+    $month = $db.GetEnumerator() | Where-Object {$_.Key.StartsWith($monthKey)} | Measure-Object Value -Average -Maximum
+    $lastMonthKey = (Get-DateKey (Get-Date).AddMonths(-1)).Substring(0, 4)
+    $lastMonth = $db.GetEnumerator() | Where-Object {$_.Key.StartsWith($lastMonthKey)} | Measure-Object Value -Average -Maximum
 
-# Output statistics
-"Current:       " + $current
-"Hour:          " + $hour
-"Day:           " + $stats.Day
-"Week:          " + $stats.Week
-"Month:         " + $stats.Month
-"Year:          " + $stats.Year
-"Total:         " + $total
-"Average Day:   " + [math]::Round($averageDay  , 3)
-"Average Week:  " + [math]::Round($averageWeek , 3)
-"Average Month: " + [math]::Round($averageMonth, 3)
-"Average Year:  " + [math]::Round($averageYear , 3)
+    $yearKey = $key.Substring(0, 2)
+    $year = $db.GetEnumerator() | Where-Object {$_.Key.StartsWith($yearKey)} | Measure-Object Value -Average -Maximum
+    $lastYearKey = (Get-DateKey (Get-Date).AddYears(-1)).Substring(0, 2)
+    $lastYear = $db.GetEnumerator() | Where-Object {$_.Key.StartsWith($lastYearKey)} | Measure-Object Value -Average -Maximum
+
+    # Output statistics
+    $output  = "# Total players" +[environment]::NewLine
+    $output += "Current    " + $current        +[environment]::NewLine
+    $output += "Last hour  " + $totalLastHour  +[environment]::NewLine
+    $output += "Last day   " + $totalLastDay   +[environment]::NewLine
+    $output += "Last week  " + $totalLastWeek  +[environment]::NewLine
+    $output += "Last month " + $totalLastMonth +[environment]::NewLine
+    $output += "Last year  " + $totalLastYear  +[environment]::NewLine
+    $output += "Total      " + $total          +[environment]::NewLine
+    $output += "" +[environment]::NewLine
+    $output += "# Maximum players online" +[environment]::NewLine
+    $output += "Today      " + [math]::Round($today.Maximum,2) + " (" + [math]::Round(($today.Maximum - $yesterday.Maximum),2) + ")" +[environment]::NewLine
+    $output += "This week  " + [math]::Round($week.Maximum,2)  + " (" + [math]::Round(($week.Maximum  - $lastWeek.Maximum),2)  + ")" +[environment]::NewLine
+    $output += "This month " + [math]::Round($month.Maximum,2) + " (" + [math]::Round(($month.Maximum - $lastMonth.Maximum),2) + ")" +[environment]::NewLine
+    $output += "This year  " + [math]::Round($year.Maximum,2)  + " (" + [math]::Round(($year.Maximum  - $lastYear.Maximum),2)  + ")" +[environment]::NewLine
+    $output += "" +[environment]::NewLine
+    $output += "# Average players online" +[environment]::NewLine
+    $output += "Today      " + [math]::Round($today.Average,2) + " (" + [math]::Round(($today.Average - $yesterday.Average),2) + ")" +[environment]::NewLine
+    $output += "This week  " + [math]::Round($week.Average,2)  + " (" + [math]::Round(($week.Average  - $lastWeek.Average),2)  + ")" +[environment]::NewLine
+    $output += "This month " + [math]::Round($month.Average,2) + " (" + [math]::Round(($month.Average - $lastMonth.Average),2) + ")" +[environment]::NewLine
+    $output += "This year  " + [math]::Round($year.Average,2)  + " (" + [math]::Round(($year.Average  - $lastYear.Average),2)  + ")" +[environment]::NewLine
+
+    $output | Out-File UserStats.txt
+    [environment]::NewLine + $output
+}
+
+function Get-DateKey {
+    param ($Date)
+    $year = $Date.Year.ToString().Substring(2)
+    $month = $Date.Month.ToString().PadLeft(2,"0")
+    $week = (Get-Date -Date $Date -UFormat %V).PadLeft(2,"0")
+    $day = $Date.Day.ToString().PadLeft(2,"0")
+    $hour = $Date.Hour.ToString().PadLeft(2,"0")
+    $twelfth = [math]::Ceiling($Date.Minute/5).ToString().PadLeft(2,"0")
+    $year + $month + $week + $day + $hour + $twelfth
+}
+
+Main
