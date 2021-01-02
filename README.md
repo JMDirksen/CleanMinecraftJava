@@ -15,7 +15,6 @@
 /gamemode creative
 /tp 0 100 0
 /setworldspawn
-/gamerule spawnRadius 500
 ```
 
 ## Automate
