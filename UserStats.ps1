@@ -3,8 +3,8 @@ $dbFile = "UserStats.json"
 
 function Main {
     # Load db
-    $db = @{}
     $db = Get-Content $dbFile | ConvertFrom-Json -AsHashtable
+    if ($null -eq $db) { $db = @{} }
 
     # Get statistics
     $statsFiles = Get-ChildItem $statsDir -Filter *.json
@@ -17,7 +17,7 @@ function Main {
     $total = $statsFiles.Count
 
     # Add record
-    $key = Get-DateKey (Get-Date)
+    $key = Get-DateKey
     $db[$key] = $current
 
     # Store db
@@ -64,12 +64,8 @@ function Main {
 }
 
 function Get-DateKey([datetime]$Date = (Get-Date)) {
-    $year = $Date.Year.ToString().Substring(2)
-    $month = $Date.Month.ToString().PadLeft(2, "0")
-    $day = $Date.Day.ToString().PadLeft(2, "0")
-    $hour = $Date.Hour.ToString().PadLeft(2, "0")
-    $twelfth = [math]::Ceiling($Date.Minute / 5).ToString().PadLeft(2, "0")
-    $year + $month + $day + $hour + $twelfth
+    $key = (Get-Date -Date $Date -Format "yyMMddHHmm").ToString()
+    $key.Substring(0, $key.Length - 1)
 }
 
 Main
