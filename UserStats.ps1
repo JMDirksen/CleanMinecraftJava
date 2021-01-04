@@ -24,15 +24,10 @@ function Main {
     $db | ConvertTo-Json -Compress | Out-File -FilePath $dbFile
 
     # Calculate statistics
-    $todayKey = $key.Substring(0, 8)
+    $todayKey = $key.Substring(0, 6)
     $today = $db.GetEnumerator() | Where-Object { $_.Key.StartsWith($todayKey) } | Measure-Object Value -Average -Maximum
-    $yesterdayKey = (Get-DateKey (Get-Date).AddDays(-1)).Substring(0, 8)
+    $yesterdayKey = (Get-DateKey (Get-Date).AddDays(-1)).Substring(0, 6)
     $yesterday = $db.GetEnumerator() | Where-Object { $_.Key.StartsWith($yesterdayKey) } | Measure-Object Value -Average -Maximum
-
-    $weekKey = $key.Substring(0, 6)
-    $week = $db.GetEnumerator() | Where-Object { $_.Key.StartsWith($weekKey) } | Measure-Object Value -Average -Maximum
-    $lastWeekKey = (Get-DateKey (Get-Date).AddDays(-7)).Substring(0, 6)
-    $lastWeek = $db.GetEnumerator() | Where-Object { $_.Key.StartsWith($lastWeekKey) } | Measure-Object Value -Average -Maximum
 
     $monthKey = $key.Substring(0, 4)
     $month = $db.GetEnumerator() | Where-Object { $_.Key.StartsWith($monthKey) } | Measure-Object Value -Average -Maximum
@@ -56,13 +51,11 @@ function Main {
     $output += "" + [environment]::NewLine
     $output += "# Maximum players online" + [environment]::NewLine
     $output += "Today      " + [math]::Round($today.Maximum, 2) + " (" + [math]::Round(($today.Maximum - $yesterday.Maximum) / $yesterday.Maximum * 100) + "%)" + [environment]::NewLine
-    $output += "This week  " + [math]::Round($week.Maximum , 2) + " (" + [math]::Round(($week.Maximum - $lastWeek.Maximum) / $lastWeek.Maximum * 100) + "%)" + [environment]::NewLine
     $output += "This month " + [math]::Round($month.Maximum, 2) + " (" + [math]::Round(($month.Maximum - $lastMonth.Maximum) / $lastMonth.Maximum * 100) + "%)" + [environment]::NewLine
     $output += "This year  " + [math]::Round($year.Maximum , 2) + " (" + [math]::Round(($year.Maximum - $lastYear.Maximum) / $lastYear.Maximum * 100) + "%)" + [environment]::NewLine
     $output += "" + [environment]::NewLine
     $output += "# Average players online" + [environment]::NewLine
     $output += "Today      " + [math]::Round($today.Average, 2) + " (" + [math]::Round(($today.Average - $yesterday.Average) / $yesterday.Average * 100) + "%)" + [environment]::NewLine
-    $output += "This week  " + [math]::Round($week.Average , 2) + " (" + [math]::Round(($week.Average - $lastWeek.Average) / $lastWeek.Average * 100) + "%)" + [environment]::NewLine
     $output += "This month " + [math]::Round($month.Average, 2) + " (" + [math]::Round(($month.Average - $lastMonth.Average) / $lastMonth.Average * 100) + "%)" + [environment]::NewLine
     $output += "This year  " + [math]::Round($year.Average , 2) + " (" + [math]::Round(($year.Average - $lastYear.Average) / $lastYear.Average * 100) + "%)" + [environment]::NewLine
 
@@ -73,16 +66,10 @@ function Main {
 function Get-DateKey([datetime]$Date = (Get-Date)) {
     $year = $Date.Year.ToString().Substring(2)
     $month = $Date.Month.ToString().PadLeft(2, "0")
-    $week = (Get-WeekNumber -DateTime $Date).ToString().PadLeft(2, "0")
     $day = $Date.Day.ToString().PadLeft(2, "0")
     $hour = $Date.Hour.ToString().PadLeft(2, "0")
     $twelfth = [math]::Ceiling($Date.Minute / 5).ToString().PadLeft(2, "0")
-    $year + $month + $week + $day + $hour + $twelfth
-}
-
-function Get-WeekNumber([datetime]$DateTime = (Get-Date)) {
-    $ci = [System.Globalization.CultureInfo]::CurrentCulture
-    $ci.Calendar.GetWeekOfYear($DateTime, $ci.DateTimeFormat.CalendarWeekRule, $ci.DateTimeFormat.FirstDayOfWeek)
+    $year + $month + $day + $hour + $twelfth
 }
 
 Main
