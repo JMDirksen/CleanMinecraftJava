@@ -65,7 +65,7 @@ function Main {
 
 function Get-DateKey([datetime]$Date = (Get-Date)) {
     $key = (Get-Date -Date $Date -Format "yyMMddHHmm").ToString()
-    $key.Substring(0, $key.Length - 1)
+    $key.Substring(0, $key.Length - 1) + "0"
 }
 
 Main
