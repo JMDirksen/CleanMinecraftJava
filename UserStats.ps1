@@ -40,7 +40,10 @@ function Main {
     $lastYear = $db.GetEnumerator() | Where-Object { $_.Key.StartsWith($lastYearKey) } | Measure-Object Value -Average -Maximum
 
     # Output statistics
-    $output = "# Total players" + [environment]::NewLine
+    $output = "# Updated" + [environment]::NewLine
+    $output += (Get-Date).ToString() + [environment]::NewLine
+    $output += "" + [environment]::NewLine
+    $output += "# Total players" + [environment]::NewLine
     $output += "Current    " + $current + [environment]::NewLine
     $output += "Last hour  " + $totalLastHour + [environment]::NewLine
     $output += "Last day   " + $totalLastDay + [environment]::NewLine
