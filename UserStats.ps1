@@ -8,7 +8,7 @@ function Main {
 
     # Get statistics
     $statsFiles = Get-ChildItem $statsDir -Filter *.json
-    $current = ($statsFiles | Where-Object { $_.LastWriteTime -gt (Get-Date).AddMinutes(-5) }).Count
+    $current = ($statsFiles | Where-Object { $_.LastWriteTime -gt (Get-Date).AddMinutes(-10) }).Count
     $totalLastHour = ($statsFiles | Where-Object { $_.LastWriteTime -gt (Get-Date).AddHours(-1) }).Count
     $totalLastDay = ($statsFiles | Where-Object { $_.LastWriteTime -gt (Get-Date).AddDays(-1) }).Count
     $totalLastWeek = ($statsFiles | Where-Object { $_.LastWriteTime -gt (Get-Date).AddDays(-7) }).Count
