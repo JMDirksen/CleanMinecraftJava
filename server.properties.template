@@ -7,3 +7,5 @@ function-permission-level=4
 spawn-protection=0
 server-port=25565
 level-seed=
+rcon.password=password
+enable-rcon=true
