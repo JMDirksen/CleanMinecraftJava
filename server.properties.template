@@ -9,3 +9,4 @@ server-port=25565
 level-seed=
 rcon.password=password
 enable-rcon=true
+broadcast-rcon-to-ops=false
