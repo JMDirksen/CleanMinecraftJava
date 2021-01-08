@@ -1,13 +1,10 @@
 /*.json
 /eula.txt
 /server.jar
-/usercount
 /logs/
 /debug/
 /crash-reports/
 /world/*
 !/world/datapacks/
 Thumbs.db
-Count.ini
-UserStats.txt
 server.properties

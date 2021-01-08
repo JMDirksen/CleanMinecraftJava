@@ -20,4 +20,3 @@
 ## Automate
 
 - Create Scheduled Task running `Start.cmd` on user login and make user auto login on boot
-- Create Scheduled Task running `pwsh -f UserStats.ps1` every 10 minutes
