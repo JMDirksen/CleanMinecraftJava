@@ -7,6 +7,7 @@
 - Install Java (64-bit) java.com
 - Clone CleanMinecraftJava repository
 - Download latest server.jar from https://www.minecraft.net/en-us/download/server/
+- Download mcrcon.exe from https://github.com/Tiiffi/mcrcon
 - Run Start.cmd
 
 ### In game
@@ -19,4 +20,4 @@
 
 ## Automate
 
-- Create Scheduled Task running `Start.cmd` on user login and make user auto login on boot
+- Create Scheduled Task running `Start.cmd` at system startup
