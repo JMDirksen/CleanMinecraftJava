@@ -6,4 +6,4 @@ for /f %%a in (config.ini) do set %%a
 
 echo 1 > mcstop.tmp
 mcrcon.exe "function restart:initiate"
-timeout /t 30
+timeout /t 40
