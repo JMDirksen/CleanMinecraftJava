@@ -5,4 +5,3 @@ setlocal
 for /f %%a in (config.ini) do set %%a
 
 mcrcon.exe
-timeout /t 5
