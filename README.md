@@ -1,23 +1,29 @@
 # CleanMinecraftJava
 
-## Setup
+## Prerequisites
 
-### On server
+    sudo apt install -y git screen lynx openjdk-17-jre-headless
 
-- Install Java (64-bit) java.com
-- Clone CleanMinecraftJava repository
-- Download latest server.jar from https://www.minecraft.net/en-us/download/server/
-- Download mcrcon.exe from https://github.com/Tiiffi/mcrcon
-- Run Start.cmd
+## Clone
 
-### In game
+    git clone https://github.com/JeftaDirksen/CleanMinecraftJava.git cleanmcjava
+    cd cleanmcjava
 
-```minecraft
-/gamemode creative
-/tp 0 100 0
-/setworldspawn
-```
+## Download
 
-## Automate
+    lynx -dump -listonly -nonumbers https://www.minecraft.net/en-us/download/server | grep server.jar | xargs wget -O server/server.jar
 
-- Create Scheduled Task running `Start.cmd` at system startup
+## Configure
+
+    cp server.properties.template server/server.properties
+    crontab crontab.template
+
+## Start server
+
+    ./start.sh
+
+## Backup
+
+    crontab -e
+        SHELL=/bin/bash
+        0 * * * * rsync -r --del --password-file=<(echo password) ~/cleanmcjava user@host::Backup/

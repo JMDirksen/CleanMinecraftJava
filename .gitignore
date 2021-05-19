@@ -1,12 +1,6 @@
-/*.json
-/eula.txt
-/*.jar
-/logs/
-/debug/
-/crash-reports/
-/world/*
-!/world/datapacks/
-Thumbs.db
+*.json
+*.jar
 server.properties
-config.ini
-mcrcon.exe
+server/logs/
+server/world/*
+!server/world/datapacks/
