@@ -1,51 +1,29 @@
 # CleanMinecraftJava
 
-## Setup
+## Prerequisites
 
-### On server
+    sudo apt install -y git screen lynx openjdk-17-jre-headless
 
-```bash
-sudo apt install default-jre-headless
-git clone https://github.com/JeftaDirksen/CleanMinecraftJava.git cleanmcjava
-cd cleanmcjava
-# Get server url: https://www.minecraft.net/en-us/download/server/
-wget https://launcher.mojang.com/.../server.jar
-# Optional: level-seed=??? and server-port=????? in server.properties
-chmod -w server.properties
-./start
-screen -r cleanmcjava
-```
+## Clone
 
-### In game
+    git clone https://github.com/JeftaDirksen/CleanMinecraftJava.git cleanmcjava
+    cd cleanmcjava
 
-```minecraft
-/gamemode creative
-/tp 0 100 0
-/setworldspawn
-/gamerule spawnRadius 100
-/gamerule keepInventory true
-```
+## Download
 
-## Automate
+    lynx -dump -listonly -nonumbers https://www.minecraft.net/en-us/download/server | grep server.jar | xargs wget -O server/server.jar
 
-```bash
-crontab -e
-  @reboot ~/cleanmcjava/start.sh
-  0 0 * * * ~/cleanmcjava/countusers.sh
-```
+## Configure
 
-## Minecraft Stats
+    cp server.properties.template server/server.properties
+    crontab crontab.template
 
-```bash
-sudo apt install apache2
-sudo nano /var/www/html/index.html
-  <script>location.href='./minecraftstats';</script>
-sudo git clone https://github.com/pdinklag/MinecraftStats.git /var/www/html/minecraftstats
-sudo chown -R jefta:jefta /var/www/html/minecraftstats
-mkdir /var/www/html/minecraftstats/config
-nano /var/www/html/minecraftstats/config/config
-  -s
-  /home/jefta/cleanmcjava
-crontab -e
-  */5 * * * * cd /var/www/html/minecraftstats ; python3 update.py -c config >/dev/null
-```
+## Start server
+
+    ./start.sh
+
+## Backup
+
+    crontab -e
+        SHELL=/bin/bash
+        0 * * * * rsync -r --del --password-file=<(echo password) ~/cleanmcjava user@host::Backup/

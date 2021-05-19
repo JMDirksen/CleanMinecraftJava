@@ -1,8 +1,6 @@
-/*.json
-/eula.txt
-/server.jar
-/usercount
-/logs/
-/debug/
-/world/*
-!/world/datapacks/
+*.json
+*.jar
+server.properties
+server/logs/
+server/world/*
+!server/world/datapacks/

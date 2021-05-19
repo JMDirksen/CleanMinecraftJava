@@ -1,0 +1,2 @@
+gamerule spawnRadius 250
+gamerule spectatorsGenerateChunks false
