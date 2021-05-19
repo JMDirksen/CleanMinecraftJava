@@ -26,4 +26,4 @@
 
     crontab -e
         SHELL=/bin/bash
-        0 * * * * rsync -r --del --password-file=<(echo password) ~/cleanmcjava user@host::Backup/
+        0 * * * * rsync -rt --del --password-file=<(echo password) ~/cleanmcjava user@host::Backup/
