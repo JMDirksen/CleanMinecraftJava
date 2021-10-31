@@ -3,5 +3,4 @@ difficulty=normal
 max-players=100
 server-port=25565
 player-idle-timeout=15
-function-permission-level=4
 spawn-protection=0
