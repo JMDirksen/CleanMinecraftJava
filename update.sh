@@ -2,7 +2,7 @@
 cd "$(dirname "$0")"
 
 # Get current version
-[ -f "server/version.txt" ] && current_version=$(cat "server/version.txt") || current_version=0
+[ -f "version.txt" ] && current_version=$(cat "version.txt") || current_version=0
 echo "Current version: $current_version"
 
 # Get latest version
@@ -22,7 +22,7 @@ echo "Downloading new version..."
 version_json_url=$(curl -s "$manifest_url" | jq -r ".versions[] | select(.id==\"$latest_version\") | .url")
 server_url=$(curl -s "$version_json_url" | jq -r ".downloads.server.url")
 wget -q "$server_url" -O "server/server.jar"
-echo "$latest_version" > "server/version.txt"
+echo "$latest_version" > "version.txt"
 echo "Updated!"
 
 # Starting server

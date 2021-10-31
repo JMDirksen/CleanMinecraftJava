@@ -6,3 +6,4 @@ while screen -list | grep -q "cleanmcjava"
 do
     sleep 1
 done
+[ -f "server/stop" ] && rm "server/stop"
