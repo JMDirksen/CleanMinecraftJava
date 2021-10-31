@@ -1,1 +1,2 @@
 @reboot ~/cleanmcjava/start.sh
+15 */3 * * * ~/cleanmcjava/update.sh
