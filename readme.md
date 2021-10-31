@@ -2,16 +2,16 @@
 
 ## Prerequisites
 
-    sudo apt install -y git screen lynx openjdk-17-jre-headless
+    sudo apt install -y git jq cron screen openjdk-18-jre-headless
 
 ## Clone
 
     git clone https://github.com/JeftaDirksen/CleanMinecraftJava.git cleanmcjava
     cd cleanmcjava
 
-## Download
+## Download / Update
 
-    lynx -dump -listonly -nonumbers https://www.minecraft.net/en-us/download/server | grep server.jar | xargs wget -O server/server.jar
+    ./update.sh
 
 ## Configure
 
@@ -22,14 +22,9 @@
 
     ./start.sh
 
-## Backup
-
-    crontab -e
-        SHELL=/bin/bash
-        0 * * * * rsync -rt --del --password-file=<(echo password) ~/cleanmcjava user@host::Backup/
-
 ## MinecraftStats
 
+    cd
     git clone https://github.com/pdinklag/MinecraftStats.git
     cd MinecraftStats
     ./makeconfig.py -s ../cleanmcjava/server --inactive-days 30 --min-playtime 15 > config.json
