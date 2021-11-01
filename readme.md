@@ -28,4 +28,4 @@
 
 ## Automation
 
-    crontab crontab.template
+    crontab ~/cleanmcjava/crontab.template
