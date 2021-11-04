@@ -1,4 +1,5 @@
-@reboot ~/cleanmcjava/start.sh
-0 0 * * * ~/cleanmcjava/restart.sh
-15 */3 * * * ~/cleanmcjava/update.sh
-*/5 * * * * cd ~/mcstats && python3 update.py config.json
+SHELL=/bin/bash
+@reboot (echo $(date) Start; ~/cleanmcjava/start.sh) >> ~/cron.log 2>&1
+0 0 * * * (echo $(date) Restart; ~/cleanmcjava/restart.sh) >> ~/cron.log 2>&1
+15 */3 * * * (echo $(date) Update; ~/cleanmcjava/update.sh) >> ~/cron.log 2>&1
+*/5 * * * * (echo $(date) Stats; cd ~/mcstats && python3 update.py config.json) >> ~/cron.log 2>&1

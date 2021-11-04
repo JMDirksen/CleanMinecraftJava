@@ -9,6 +9,7 @@
     git clone https://github.com/JeftaDirksen/CleanMinecraftJava.git cleanmcjava
     cd cleanmcjava
     cp server.properties.template server/server.properties
+    crontab crontab.template
     ./update.sh
 
 ## MinecraftStats
@@ -25,7 +26,3 @@
       </Directory>
     chmod +x ~
     sudo service apache2 reload
-
-## Automation
-
-    crontab ~/cleanmcjava/crontab.template
